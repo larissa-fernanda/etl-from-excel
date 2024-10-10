@@ -67,6 +67,8 @@ FIELDS_TO_MERGE_ON=ColunaData/hora,ColunaLocal,ColunaProduto
 # Nome da(s) coluna(s) que serão selecionadas para serem inseridas na tabela
 # Caso não exista, ele pegará todas as colunas do arquivo. Só deixar em branco se quiser todas as colunas
 COLUMNS_TO_SELECT=ColunaData/hora,ColunaLocal,ColunaProduto,ColunaQuantidade,ColunaValor
+# Colunas que serão usadas para fazer o hash usado para mesclar as informações (equivalente a chave composta de uma tabela)
+COLUMNS_TO_HASH=ColunaData/hora,ColunaLocal,ColunaProduto
 # Nome da tabela do Airtable que será usada (se não existir, ele criará uma nova)
 TABLE_NAME=nome_que_eu_quero_para_minha_nova_tabela_ou_que_já_existe_no_airtable
 ```
