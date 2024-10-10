@@ -1,4 +1,5 @@
 import pandas as pd
+import hashlib
 from utils.rename_to_snake_case import rename_to_snake_case
 
 def read_data_from_excel(path:str, sheet_name:str=None, header:int=0) -> pd.DataFrame:
@@ -62,8 +63,31 @@ def select_columns(dataset:pd.DataFrame, columns:list) -> pd.DataFrame:
         - dataset: pandas DataFrame with the data
         - columns: list of columns to select
     """
-    new_columns = [rename_to_snake_case(column) for column in columns]
-    return dataset[new_columns]
+    return dataset[columns]
+
+def generate_row_hash(row: pd.Series) -> str:
+    """
+    Function to generate a hash from a row in a pandas DataFrame.
+    It concatenates the values of the row and generates a hash from the string.
+
+    Args:
+        - row: pandas Series with the values of the row
+    """
+    row_str = ''.join(row.astype(str).values)
+
+    return hashlib.sha256(row_str.encode()).hexdigest()
+
+def add_hash_column(dataset: pd.DataFrame, columns: list) -> pd.DataFrame:
+    """
+    Function to add a hash column to the dataset.
+    It uses the selected columns to generate the hash.
+
+    Args:
+        - dataset: pandas DataFrame with the data
+        - columns: list of columns to use to generate the hash
+    """
+    dataset['column_hash'] = dataset[columns].apply(generate_row_hash, axis=1)
+    return dataset
 
 def treat_data_pipeline(
         path, 
@@ -97,6 +121,8 @@ def treat_data_pipeline(
         for column in date_column:
             df = treat_date_column(df, rename_to_snake_case(column))
     if columns_to_select:
+        columns_to_select = [rename_to_snake_case(column) for column in columns_to_select]
         df = select_columns(df, columns_to_select)
+        df = add_hash_column(df, columns_to_select)
 
     return df
