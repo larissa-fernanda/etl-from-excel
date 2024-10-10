@@ -163,11 +163,11 @@ def send_to_airtable_pipeline(dataframe):
         create_table(
             columns=columns,
             table_name=TABLE_NAME)
+    else:
+        column_hash_exists = verify_column_exists(table, 'column_hash')
     
-    column_hash_exists = verify_column_exists(table, 'column_hash')
-    
-    if column_hash_exists is False:
-        dataframe = dataframe.drop(columns=['column_hash'])
+        if column_hash_exists is False:
+            dataframe = dataframe.drop(columns=['column_hash'])
 
     upsert_data_airtable(
         dataset=dataframe,
