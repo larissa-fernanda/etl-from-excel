@@ -140,7 +140,9 @@ def send_to_airtable_pipeline(dataframe):
 
     if not table_exists(TABLE_NAME):
         columns = get_dataset_columns_with_types(dataset=dataframe, primary_field=PRIMARY_FIELD)
-        create_table(columns)
+        create_table(
+            columns=columns,
+            table_name=TABLE_NAME)
 
     upsert_data_airtable(
         dataset=dataframe,
