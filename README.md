@@ -43,7 +43,7 @@ A atualização da tabela no Airtable é feita pelo ETL. Primeiro, o ETL script 
 1. Clone o repositório
 2. Instale as dependências com `poetry install`
 3. Crie um arquivo `.env` na raiz do projeto de acordo com o exemplo contido em [`.env.example`](.env.example)
-4. Rode o script `main.py` com `poetry run python main.py`
+4. Rode o script `main.py` com `poetry run python -m etl_from_excel.main`
 5. Com o bot rodando, envie uma mensagem com um arquivo de Excel para o bot no Discord
 
 ## Como utilizar o bot
