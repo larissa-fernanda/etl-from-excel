@@ -5,8 +5,8 @@ import json
 import pandas as pd
 import numpy as np
 from loguru import logger
-from utils.rename_to_snake_case import rename_to_snake_case
-from utils.get_dataset_columns import get_dataset_columns_with_types
+from .utils.rename_to_snake_case import rename_to_snake_case
+from .utils.get_dataset_columns import get_dataset_columns_with_types
 
 load_dotenv()
 

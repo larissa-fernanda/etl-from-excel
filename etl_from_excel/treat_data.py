@@ -1,7 +1,7 @@
 import pandas as pd
 import hashlib
 from loguru import logger
-from utils.rename_to_snake_case import rename_to_snake_case
+from .utils.rename_to_snake_case import rename_to_snake_case
 
 def read_data_from_excel(path:str, sheet_name:str=None, header:int=0) -> pd.DataFrame:
     """

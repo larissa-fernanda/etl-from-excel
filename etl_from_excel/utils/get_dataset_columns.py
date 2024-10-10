@@ -1,4 +1,4 @@
-from utils.rename_to_snake_case import rename_to_snake_case
+from .rename_to_snake_case import rename_to_snake_case
 
 def get_dataset_columns_with_types(dataset, primary_field=None):
     """

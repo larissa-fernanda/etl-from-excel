@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
 from loguru import logger
-from treat_data import treat_data_pipeline
-from send_to_airtable import send_to_airtable_pipeline
+from .treat_data import treat_data_pipeline
+from .send_to_airtable import send_to_airtable_pipeline
 
 load_dotenv()
 

@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from discord_bot import MyClient
+from .discord_bot import MyClient
 
 load_dotenv()
 

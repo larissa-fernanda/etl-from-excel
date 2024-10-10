@@ -3,7 +3,7 @@ import asyncio
 import traceback
 import discord
 from loguru import logger
-from etl import main as etl_main
+from .etl import main as etl_main
 
 intents = discord.Intents.default()
 intents.message_content = True
