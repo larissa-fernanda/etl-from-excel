@@ -46,6 +46,9 @@ A atualização da tabela no Airtable é feita pelo ETL. Primeiro, o ETL script 
 4. Rode o script `main.py` com `poetry run python -m etl_from_excel.main`
 5. Com o bot rodando, envie uma mensagem com um arquivo de Excel para o bot no Discord
 
+## Como rodar os testes
+1. Rode o comando `poetry run pytest` na raiz do projeto
+
 ## Como utilizar o bot
 
 1. Adicione o bot ao seu servidor do Discord
