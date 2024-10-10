@@ -39,12 +39,14 @@ A atualização da tabela no Airtable é feita pelo ETL. Primeiro, o ETL script 
 3. Python 3.12 e pip instalados
 2. Poetry instalado (`pip install poetry`)
 
-## Passos
+## Primeiros passos
 1. Clone o repositório
 2. Instale as dependências com `poetry install`
-3. Crie um arquivo `.env` na raiz do projeto de acordo com o exemplo contido em [`.env.example`](.env.example)
-4. Rode o script `main.py` com `poetry run python -m etl_from_excel.main`
-5. Com o bot rodando, envie uma mensagem com um arquivo de Excel para o bot no Discord
+
+## Como rodar o projeto
+1. Crie um arquivo `.env` na raiz do projeto de acordo com o exemplo contido em [`.env.example`](.env.example)
+2. Rode o script `main.py` com `poetry run python -m etl_from_excel.main`
+3. Com o bot rodando, envie uma mensagem com um arquivo de Excel para o bot no Discord
 
 ## Como rodar os testes
 1. Rode o comando `poetry run pytest` na raiz do projeto
@@ -76,4 +78,8 @@ COLUMNS_TO_HASH=ColunaData/hora,ColunaLocal,ColunaProduto
 TABLE_NAME=nome_que_eu_quero_para_minha_nova_tabela_ou_que_já_existe_no_airtable
 ```
 
+### Comando ping
 Para testar se o bot está conseguindo ler suas mensagens, envie uma mensagem com o texto `ping` e veja se ele responde com `pong`.
+
+### Comando instructions
+Para ver as instruções de uso do bot, envie uma mensagem mencionando ele com o texto `instructions`.
