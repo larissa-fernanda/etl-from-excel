@@ -99,8 +99,8 @@ def upsert_data_airtable(
 
     dataset = dataset.replace({np.nan: None})
 
-    for column in dataset.select_dtypes(include=['datetime64[ns]']).columns:
-        dataset[column] = dataset[column].dt.strftime('%Y-%m-%dT%H:%M:%S')
+    for column in dataset.select_dtypes(include=['datetime64[ns, UTC]']).columns:
+        dataset[column] = dataset[column].dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 
     for i in range(0, len(dataset), batch_size):
         batch = dataset.iloc[i:i+batch_size]
