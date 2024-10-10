@@ -1,6 +1,7 @@
+import os
 import asyncio
 import discord
-import os
+from loguru import logger
 from etl import main as etl_main
 
 intents = discord.Intents.default()
@@ -12,10 +13,10 @@ class MyClient(discord.Client):
         super().__init__(intents=intents)
 
     async def on_ready(self):
-        print(f'Logged in as {self.user}')
+        logger.info(f'Logged in as {self.user}')
 
     async def on_message(self, message):
-        print(f'Message from {message.author}: {message.content}')
+        logger.info(f'Message from {message.author}: {message.content}')
         if message.author == self.user:
             return
 
@@ -30,7 +31,7 @@ class MyClient(discord.Client):
                 if attachment.filename.endswith('.xlsx'):
                     temp_path = f"./temp_{attachment.filename}"
                     await attachment.save(temp_path)
-                    print(f'Arquivo {attachment.filename} recebido e salvo em {temp_path}.')
+                    logger.info(f'Arquivo {attachment.filename} recebido e salvo em {temp_path}.')
 
                     await asyncio.to_thread(etl_main, temp_path)
 

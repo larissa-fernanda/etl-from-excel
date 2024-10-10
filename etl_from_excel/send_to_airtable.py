@@ -4,6 +4,7 @@ import requests
 import json
 import pandas as pd
 import numpy as np
+from loguru import logger
 from utils.rename_to_snake_case import rename_to_snake_case
 from utils.get_dataset_columns import get_dataset_columns_with_types
 
@@ -28,13 +29,14 @@ def table_exists(table_name):
     if response.status_code == 200:
 
         tables = response.json().get('tables', [])
-        print(f"Searching for table... {table_name}")
+        logger.info(f"Searching for table... {table_name}")
         for table in tables:
             if table.get('name') == table_name:
+                logger.info(f"Tabela encontrada: {table_name}")
                 return table
         return None
     else:
-        print(f"Erro ao buscar tabelas: {response.content}")
+        logger.error(f"Erro ao buscar tabelas: {response.content}")
         return None
 
 def verify_column_exists(table, column_name):
@@ -63,10 +65,10 @@ def create_table(columns, table_name, description=""):
     response = requests.post(AIRTABLE_META_URL, headers=headers, data=json.dumps(payload))
 
     if response.status_code == 200:
-        print("Tabela criada com sucesso.")
-        print(response.json())
+        logger.success("Tabela criada com sucesso.")
+        logger.info(response.json())
     else:
-        print(f"Erro ao criar tabela: {response.content}")
+        logger.error(f"Erro ao criar tabela: {response.content}")
 
 def upsert_data_airtable(
         dataset:pd.DataFrame,
@@ -124,14 +126,14 @@ def upsert_data_airtable(
 
         if response.status_code == 200:
             success_requests += 1
-            print(f"Lote {i // batch_size + 1} enviado com sucesso.")
+            logger.info(f"Lote {i // batch_size + 1} enviado com sucesso.")
         else:
             error_requests += 1
-            print(f"Erro no lote {i // batch_size + 1}: {response.content}")
+            logger.error(f"Erro no lote {i // batch_size + 1}: {response.content}")
 
         all_requests += 1
 
-    print(f"Total de requisições: {all_requests}, Sucesso: {success_requests}, Erro: {error_requests}")
+    logger.info(f"Total de requisições: {all_requests}, Sucesso: {success_requests}, Erro: {error_requests}")
 
 def send_upsert_request_to_airtable(payload, table_name):
     """

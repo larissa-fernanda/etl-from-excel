@@ -1,5 +1,6 @@
 import pandas as pd
 import hashlib
+from loguru import logger
 from utils.rename_to_snake_case import rename_to_snake_case
 
 def read_data_from_excel(path:str, sheet_name:str=None, header:int=0) -> pd.DataFrame:
@@ -14,7 +15,7 @@ def read_data_from_excel(path:str, sheet_name:str=None, header:int=0) -> pd.Data
     try:
         return pd.read_excel(path, sheet_name=sheet_name, header=header)
     except Exception as e:
-        print(f"Erro ao ler arquivo: {e}")
+        logger.error(f"Erro ao ler arquivo: {e}")
         return 0
 
 def rename_columns_to_snake_case(dataset:pd.DataFrame) -> pd.DataFrame:

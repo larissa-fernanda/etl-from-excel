@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from loguru import logger
 from treat_data import treat_data_pipeline
 from send_to_airtable import send_to_airtable_pipeline
 
@@ -12,7 +13,7 @@ def main(file_path):
     DATE_COLUMNS = os.getenv('DATE_COLUMNS').split(',') if os.getenv('DATE_COLUMNS') else None
     COLUMNS_TO_SELECT = os.getenv('COLUMNS_TO_SELECT').split(',') if os.getenv('COLUMNS_TO_SELECT') else None
 
-    print('Starting ETL process...')
+    logger.info('Starting ETL process...')
 
     df = treat_data_pipeline(
         path=file_path,
