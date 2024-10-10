@@ -24,13 +24,31 @@ def table_exists(table_name):
     Function to check if a table exists in the Airtable base
     """
     response = requests.get(AIRTABLE_META_URL, headers=headers)
+
     if response.status_code == 200:
+
         tables = response.json().get('tables', [])
         print(f"Searching for table... {table_name}")
-        return any(table.get('name') == table_name for table in tables)
+        for table in tables:
+            if table.get('name') == table_name:
+                return table
+        return None
     else:
         print(f"Erro ao buscar tabelas: {response.content}")
-        return False
+        return None
+
+def verify_column_exists(table, column_name):
+    """
+    Function to check if a column exists in a table
+
+    Args:
+        - table: dictionary with the table information
+        - column_name: name of the column to check
+    """
+    for field in table.get('fields', []):
+        if field.get('name') == column_name:
+            return True
+    return False
 
 def create_table(columns, table_name, description=""):
     """
@@ -138,11 +156,18 @@ def send_to_airtable_pipeline(dataframe):
     FIELDS_TO_MERGE_ON = os.getenv('FIELDS_TO_MERGE_ON').split(',') if os.getenv('FIELDS_TO_MERGE_ON') else None
     TABLE_NAME = os.getenv('TABLE_NAME')
 
-    if not table_exists(TABLE_NAME):
+    table = table_exists(TABLE_NAME)
+
+    if not table:
         columns = get_dataset_columns_with_types(dataset=dataframe, primary_field=PRIMARY_FIELD)
         create_table(
             columns=columns,
             table_name=TABLE_NAME)
+    
+    column_hash_exists = verify_column_exists(table, 'column_hash')
+    
+    if column_hash_exists is False:
+        dataframe = dataframe.drop(columns=['column_hash'])
 
     upsert_data_airtable(
         dataset=dataframe,
