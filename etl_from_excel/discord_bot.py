@@ -4,8 +4,6 @@ from discord.ext import commands
 import os
 from etl import main as etl_main
 
-TOKEN = os.getenv('DISCORD_BOT_TOKEN')
-
 intents = discord.Intents.default()
 intents.message_content = True
 intents.guilds = True
@@ -36,5 +34,3 @@ class MyClient(discord.Client):
         if message.content.lower() == 'ping':
             await message.channel.send('pong')
 
-client = MyClient()
-client.run(TOKEN)
