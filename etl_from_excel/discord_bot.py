@@ -32,10 +32,20 @@ class MyClient(discord.Client):
                     temp_path = f"./temp_{attachment.filename}"
                     await attachment.save(temp_path)
                     logger.info(f'Arquivo {attachment.filename} recebido e salvo em {temp_path}.')
+                    await message.channel.send(f'Arquivo {attachment.filename} recebido! Vou tentar salvar! :sweat_smile:')
 
-                    await asyncio.to_thread(etl_main, temp_path)
-
-                    os.remove(temp_path)
+                    try:
+                        await asyncio.to_thread(etl_main, temp_path)
+                        logger.info(f'Processamento do arquivo {attachment.filename} concluído com sucesso.')
+                        await message.channel.send(f'Processamento do arquivo {attachment.filename} concluído com sucesso aqui do meu lado! Sugiro que verifique lá no Airtable agora! :smile_cat:')
+                    
+                    except Exception as e:
+                        error_message = f"Erro ao processar o arquivo {attachment.filename}: {str(e)}"
+                        logger.error(error_message)
+                        await message.channel.send(f"Deu ruim aqui! :tired_face: \n{error_message}")
+                    
+                    finally:
+                        os.remove(temp_path)
 
         if message.content.lower() == 'ping':
             await message.channel.send('pong')
