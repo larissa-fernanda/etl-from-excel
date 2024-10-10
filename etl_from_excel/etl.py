@@ -5,13 +5,13 @@ from send_to_airtable import send_to_airtable_pipeline
 
 load_dotenv()
 
-SHEET_NAME = os.getenv('SHEET_NAME')
-HEADER_ROW = int(os.getenv('HEADER_ROW'))
-QUANTITY_COLUMNS = os.getenv('QUANTITY_COLUMNS').split(',') if os.getenv('QUANTITY_COLUMNS') else None
-DATE_COLUMNS = os.getenv('DATE_COLUMNS').split(',') if os.getenv('DATE_COLUMNS') else None
-COLUMNS_TO_SELECT = os.getenv('COLUMNS_TO_SELECT').split(',') if os.getenv('COLUMNS_TO_SELECT') else None
-
 def main(file_path):
+    SHEET_NAME = os.getenv('SHEET_NAME')
+    HEADER_ROW = int(os.getenv('HEADER_ROW'))
+    QUANTITY_COLUMNS = os.getenv('QUANTITY_COLUMNS').split(',') if os.getenv('QUANTITY_COLUMNS') else None
+    DATE_COLUMNS = os.getenv('DATE_COLUMNS').split(',') if os.getenv('DATE_COLUMNS') else None
+    COLUMNS_TO_SELECT = os.getenv('COLUMNS_TO_SELECT').split(',') if os.getenv('COLUMNS_TO_SELECT') else None
+
     print('Starting ETL process...')
 
     df = treat_data_pipeline(

@@ -9,13 +9,9 @@ from utils.get_dataset_columns import get_dataset_columns_with_types
 
 load_dotenv()
 
-PRIMARY_FIELD = os.getenv('PRIMARY_FIELD')
-FIELDS_TO_MERGE_ON = os.getenv('FIELDS_TO_MERGE_ON').split(',') if os.getenv('FIELDS_TO_MERGE_ON') else None
-
 AIRTABLE_ACCESS_TOKEN = os.getenv('AIRTABLE_ACCESS_TOKEN')
 BASE_ID = os.getenv('BASE_ID')
-TABLE_NAME = os.getenv('TABLE_NAME')
-AIRTABLE_URL = f'https://api.airtable.com/v0/{BASE_ID}/' + TABLE_NAME
+AIRTABLE_URL = f'https://api.airtable.com/v0/{BASE_ID}/'
 AIRTABLE_META_URL = f'https://api.airtable.com/v0/meta/bases/{BASE_ID}/tables'
 
 headers = {
@@ -36,7 +32,7 @@ def table_exists(table_name):
         print(f"Erro ao buscar tabelas: {response.content}")
         return False
 
-def create_table(columns, table_name=TABLE_NAME, description=""):
+def create_table(columns, table_name, description=""):
     """
     Function to create a table in the Airtable base
     """
@@ -54,7 +50,12 @@ def create_table(columns, table_name=TABLE_NAME, description=""):
     else:
         print(f"Erro ao criar tabela: {response.content}")
 
-def upsert_data_airtable(dataset:pd.DataFrame, fields_to_merge_on:list, batch_size=10):
+def upsert_data_airtable(
+        dataset:pd.DataFrame,
+        table_name:str,
+        fields_to_merge_on:list, 
+        batch_size=10
+        ):
     """
     Function to send data to Airtable in batches.
     It uses the upsert feature to update existing records.
@@ -65,6 +66,7 @@ def upsert_data_airtable(dataset:pd.DataFrame, fields_to_merge_on:list, batch_si
     Args:
         - dataset: pandas DataFrame with the data to send
         - fields_to_merge_on: list of fields used as the external key for the upsert
+        - table_name: name of the table in Airtable
         - batch_size: number of records to send in each batch (default is 10, maximum is 10)
     Returns:
         - None
@@ -100,7 +102,7 @@ def upsert_data_airtable(dataset:pd.DataFrame, fields_to_merge_on:list, batch_si
 
         payload['records'] = records
 
-        response = send_upsert_request_to_airtable(payload)
+        response = send_upsert_request_to_airtable(payload, table_name)
 
         if response.status_code == 200:
             success_requests += 1
@@ -113,14 +115,15 @@ def upsert_data_airtable(dataset:pd.DataFrame, fields_to_merge_on:list, batch_si
 
     print(f"Total de requisições: {all_requests}, Sucesso: {success_requests}, Erro: {error_requests}")
 
-def send_upsert_request_to_airtable(payload):
+def send_upsert_request_to_airtable(payload, table_name):
     """
     Function to send an upsert request to Airtable
 
     Args:
         - payload: dictionary with the data to send
+        - table_name: name of the table in Airtable
     """
-    response = requests.patch(AIRTABLE_URL, headers=headers, data=json.dumps(payload, ensure_ascii=False).encode('utf-8'))
+    response = requests.patch(AIRTABLE_URL + table_name, headers=headers, data=json.dumps(payload, ensure_ascii=False).encode('utf-8'))
 
     return response
 
@@ -131,8 +134,15 @@ def send_to_airtable_pipeline(dataframe):
     Args:
         - dataframe: pandas DataFrame with the data to send
     """
+    PRIMARY_FIELD = os.getenv('PRIMARY_FIELD')
+    FIELDS_TO_MERGE_ON = os.getenv('FIELDS_TO_MERGE_ON').split(',') if os.getenv('FIELDS_TO_MERGE_ON') else None
+    TABLE_NAME = os.getenv('TABLE_NAME')
+
     if not table_exists(TABLE_NAME):
         columns = get_dataset_columns_with_types(dataset=dataframe, primary_field=PRIMARY_FIELD)
         create_table(columns)
 
-    upsert_data_airtable(dataframe, FIELDS_TO_MERGE_ON)
+    upsert_data_airtable(
+        dataset=dataframe,
+        table_name=TABLE_NAME,
+        fields_to_merge_on=FIELDS_TO_MERGE_ON)
