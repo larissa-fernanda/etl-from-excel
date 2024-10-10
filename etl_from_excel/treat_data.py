@@ -41,19 +41,24 @@ def treat_quantity_column(dataset:pd.DataFrame, column:str) -> pd.DataFrame:
     dataset[column] = dataset[column].apply(pd.to_numeric)
     return dataset
 
-def treat_date_column(dataset:pd.DataFrame, column:str) -> pd.DataFrame:
+def treat_date_column(dataset: pd.DataFrame, column: str, timezone: str = 'America/Sao_Paulo') -> pd.DataFrame:
     """
-    Function to treat a date column in a dataset.
+    Function to treat a date column in a dataset and localize it to a specific timezone.
 
     Args:
         - dataset: pandas DataFrame with the data to treat
         - column: name of the column to treat
+        - timezone: string representing the timezone to localize the dates (default is 'America/Sao_Paulo')
     """
     dataset[column] = pd.to_datetime(
         dataset[column],
         errors='coerce',
         format='%d/%m/%Y %H:%M:%S'
-        )
+    )
+
+    dataset[column] = dataset[column].dt.tz_localize(timezone)
+    dataset[column] = dataset[column].dt.tz_convert('UTC')
+
     return dataset
 
 def select_columns(dataset:pd.DataFrame, columns:list) -> pd.DataFrame:
@@ -96,7 +101,8 @@ def treat_data_pipeline(
         header,
         quantity_column:list=None,
         date_column:list=None,
-        columns_to_select:list=None
+        columns_to_select:list=None,
+        columns_to_hash:list=None
         ):
     """
     Function to treat the data from an Excel file.
@@ -108,22 +114,33 @@ def treat_data_pipeline(
         - header: row number to use as the header (0-indexed)
         - quantity_column: list of names of the columns to treat as quantity (default is None)
         - date_column: list of names of the columns to treat as date (default is None)
+        - columns_to_select: list of names of the columns to select (default is None)
+        - columns_to_hash: list of names of the columns to use to generate the hash (default is None)
     """
     df = read_data_from_excel(
         path=path, 
         sheet_name=sheet_name, 
         header=header
     )
+
     df = rename_columns_to_snake_case(df)
+
     if quantity_column:
         for column in quantity_column:
             df = treat_quantity_column(df, rename_to_snake_case(column))
+
     if date_column:
         for column in date_column:
             df = treat_date_column(df, rename_to_snake_case(column))
+
+    if columns_to_hash:
+        columns_to_hash = [rename_to_snake_case(column) for column in columns_to_hash]
+        df = add_hash_column(df, columns_to_hash)
+    
     if columns_to_select:
         columns_to_select = [rename_to_snake_case(column) for column in columns_to_select]
+        if columns_to_hash and 'column_hash' not in columns_to_select:
+            columns_to_select.append('column_hash')
         df = select_columns(df, columns_to_select)
-        df = add_hash_column(df, columns_to_select)
 
     return df
