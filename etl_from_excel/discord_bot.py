@@ -1,6 +1,5 @@
 import asyncio
 import discord
-from discord.ext import commands
 import os
 from etl import main as etl_main
 
@@ -21,6 +20,12 @@ class MyClient(discord.Client):
             return
 
         if message.attachments:
+            if message.content:
+                for line in message.content.strip().split("\n"):
+                    if '=' in line:
+                        key, value = line.split("=", 1)
+                        os.environ[key] = value.strip()
+
             for attachment in message.attachments:
                 if attachment.filename.endswith('.xlsx'):
                     temp_path = f"./temp_{attachment.filename}"
