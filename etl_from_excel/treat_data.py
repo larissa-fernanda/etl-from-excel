@@ -1,18 +1,17 @@
 import pandas as pd
 from utils.rename_to_snake_case import rename_to_snake_case
 
-def read_data_from_excel(path:str, filename:str, sheet_name:str=None, header:int=0) -> pd.DataFrame:
+def read_data_from_excel(path:str, sheet_name:str=None, header:int=0) -> pd.DataFrame:
     """
     Function to read data from an Excel file.
     
     Args:
         - path: path to the file
-        - filename: name of the file
         - sheet_name: name of the sheet to read
         - header: row number to use as the header (0-indexed)
     """
     try:
-        return pd.read_excel(path + filename, sheet_name=sheet_name, header=header)
+        return pd.read_excel(path, sheet_name=sheet_name, header=header)
     except Exception as e:
         print(f"Erro ao ler arquivo: {e}")
         return 0
@@ -68,7 +67,6 @@ def select_columns(dataset:pd.DataFrame, columns:list) -> pd.DataFrame:
 
 def treat_data_pipeline(
         path, 
-        filename, 
         sheet_name, 
         header,
         quantity_column:list=None,
@@ -81,7 +79,6 @@ def treat_data_pipeline(
 
     Args:
         - path: path to the file
-        - filename: name of the file
         - sheet_name: name of the sheet to read
         - header: row number to use as the header (0-indexed)
         - quantity_column: list of names of the columns to treat as quantity (default is None)
@@ -89,7 +86,6 @@ def treat_data_pipeline(
     """
     df = read_data_from_excel(
         path=path, 
-        filename=filename, 
         sheet_name=sheet_name, 
         header=header
     )
