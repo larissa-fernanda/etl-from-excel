@@ -22,8 +22,14 @@ A atualização da tabela no Airtable é feita pelo ETL. Primeiro, o ETL script 
 
 # Como rodar
 
-Para rodar o pipeline, é necessário ter o poetry instalado.
+## Dependências
 
+1. Uma conta no Discord
+2. Uma conta no Airtable
+3. Python 3.12 e pip instalados
+2. Poetry instalado (`pip install poetry`)
+
+## Passos
 1. Clone o repositório
 2. Instale as dependências com `poetry install`
 3. Crie um arquivo `.env` na raiz do projeto de acordo com o exemplo contido em [`.env.example`](.env.example)
