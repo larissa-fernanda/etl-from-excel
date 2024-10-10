@@ -1,5 +1,6 @@
 import os
 import asyncio
+import traceback
 import discord
 from loguru import logger
 from etl import main as etl_main
@@ -38,11 +39,18 @@ class MyClient(discord.Client):
                         await asyncio.to_thread(etl_main, temp_path)
                         logger.info(f'Processamento do arquivo {attachment.filename} concluído com sucesso.')
                         await message.channel.send(f'Processamento do arquivo {attachment.filename} concluído com sucesso aqui do meu lado! Sugiro que verifique lá no Airtable agora! :smile_cat:')
-                    
+
                     except Exception as e:
                         error_message = f"Erro ao processar o arquivo {attachment.filename}: {str(e)}"
-                        logger.error(error_message)
-                        await message.channel.send(f"Deu ruim aqui! :tired_face: \n{error_message}")
+                        traceback_info = traceback.format_exc()
+
+                        prefix_message = "Deu ruim aqui! :tired_face: \n"
+
+                        logger.error(f"{error_message}")
+                        logger.debug(f"{traceback_info}")
+
+                        await message.channel.send(f"{prefix_message}{error_message}")
+
                     
                     finally:
                         os.remove(temp_path)
