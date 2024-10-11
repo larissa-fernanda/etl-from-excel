@@ -81,5 +81,5 @@ TABLE_NAME=nome_que_eu_quero_para_minha_nova_tabela_ou_que_já_existe_no_airtabl
 ### Comando ping
 Para testar se o bot está conseguindo ler suas mensagens, envie uma mensagem com o texto `ping` e veja se ele responde com `pong`.
 
-### Comando instructions
-Para ver as instruções de uso do bot, envie uma mensagem mencionando ele com o texto `instructions`.
+### Comando help
+Para ver as instruções de uso do bot, envie uma mensagem mencionando ele com o texto `help`.

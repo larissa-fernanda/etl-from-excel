@@ -55,19 +55,19 @@ class MyClient(discord.Client):
         Args:
             - message (discord.Message): The message that was received.
         """
-        if "instructions" in message.content.lower():
-            await self.send_instructions(message.channel)
+        if "help" in message.content.lower():
+            await self.send_help(message.channel)
         elif "template" in message.content.lower():
             await self.send_template(message.channel)
 
-    async def send_instructions(self, channel):
+    async def send_help(self, channel):
         """
         Function that sends the instructions to the channel.
 
         Args:
             - channel (discord.TextChannel): The channel to send the instructions.
         """
-        instructions = (
+        help = (
             "Instruções de Uso:\n"
             "1. Envie um arquivo no formato .xlsx.\n"
             "2. O bot irá processar o arquivo e enviar os dados para o Airtable.\n"
@@ -77,7 +77,7 @@ class MyClient(discord.Client):
             "6. Para verificar o status, você pode usar o comando 'ping'.\n"
             "7. Se houver algum erro durante o processamento, o bot irá informar."
         )
-        await channel.send(instructions)
+        await channel.send(help)
 
     async def send_template(self, channel):
         """
@@ -102,7 +102,7 @@ class MyClient(discord.Client):
             "# Nome da(s) coluna(s) que serão usadas para juntar as informações com as que já estão na tabela\n"
             "FIELDS_TO_MERGE_ON=ColunaData/hora,ColunaLocal,ColunaProduto\n"
             "# Nome da(s) coluna(s) que serão selecionadas para serem inseridas na tabela\n"
-            "# Caso não exista, ele pegará todas as colunas do arquivo. Só deixar em branco se quiser todas as colunas\n"
+            "# Só deixar em branco se quiser todas as colunas\n"
             "COLUMNS_TO_SELECT=ColunaData/hora,ColunaLocal,ColunaProduto,ColunaQuantidade,ColunaValor\n"
             "# Colunas que serão usadas para fazer o hash usado para mesclar as informações (equivalente a chave composta de uma tabela)\n"
             "COLUMNS_TO_HASH=ColunaData/hora,ColunaLocal,ColunaProduto\n"
