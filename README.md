@@ -83,3 +83,6 @@ Para testar se o bot está conseguindo ler suas mensagens, envie uma mensagem co
 
 ### Comando help
 Para ver as instruções de uso do bot, envie uma mensagem mencionando ele com o texto `help`.
+
+### Comando gato
+Experimente enviar `gato` para ver o que ele responde 😺.
